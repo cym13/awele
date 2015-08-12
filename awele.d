@@ -143,6 +143,10 @@ struct UI {
         writeln();
         writeln("Congratulation ", game.winner.name, " you won!");
     }
+
+    void pointsAlert(uint grainsWon) {
+        writeln("You won ", grainsWon, " points!");
+    }
 }
 
 void main() {
@@ -150,13 +154,13 @@ void main() {
     auto game = Game(ui.getPlayer(1),
                      ui.getPlayer(2));
 
-    uint grains_won;
+    uint grainsWon;
     while (!game.end) {
         ui.update(game);
-        grains_won = game.distribute(ui.getMove(game));
+        grainsWon = game.distribute(ui.getMove(game));
 
-        if (grains_won)
-            writeln("You won ", grains_won, " points!");
+        if (grainsWon)
+            ui.pointsAlert(grainsWon);
 
         game.swapTurns();
     }
