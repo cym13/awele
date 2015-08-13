@@ -16,6 +16,12 @@ To start:
 
     rdmd awele.d
 
+TODO
+====
+
+[ ] Fix "no move during starvation" bug
+[ ] Fix board display glitch
+
 License
 =======
 
