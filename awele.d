@@ -16,6 +16,10 @@ struct Player {
         this.name  = name;
         this.holes = iota(6*number, (6*number)+6).array;
     }
+
+    bool starving() const {
+        return holes[].sum == 0;
+    }
 }
 
 struct Game {
@@ -56,14 +60,19 @@ struct Game {
     }
 
 
-    bool isValid(in int move) const {
-        if (!players[curr].holes[].canFind(move))
+    bool valid(in int move) const {
+        auto player   = players[curr];
+        auto opponent = players[(curr == 0) ? 1 : 0];
+
+        if (!player.holes[].canFind(move))
             return false;
 
         if (board[move] == 0)
             return false;
 
-        // TODO: missing rules
+        if (opponent.starving &&
+           !opponent.holes[].canFind((move+board[move])%12))
+            return false;
 
         return true;
     }
@@ -74,7 +83,8 @@ struct Game {
     }
 
     bool end() {
-        // TODO: missing rules
+        if (players[curr].starving)
+            return true;
 
         if (_end)
             return true;
@@ -86,7 +96,9 @@ struct Game {
     }
 
     Player winner() const {
-        // TODO: missing rules
+        if (players[].count!(p => p.starving) == 1)
+            return players[0].starving ? players[1] : players[0];
+
         return players[0].points > players[1].points ? players[0] : players[1];
     }
 }
@@ -115,7 +127,7 @@ struct UI {
         }
 
         int move = getinput() + (6 * game.curr);
-        while (!game.isValid(move)) {
+        while (!game.valid(move)) {
             writeln("Invalid move");
 
             move = getinput();
@@ -127,9 +139,15 @@ struct UI {
     void printBoard(in Game game) {
         writeln(game.board);
 
+        write(" ");
         if (game.curr == 1)
             write("                  ");
-        writeln(" a  b  c  d  e  f");
+
+        enum entries = "abcdef".split("");
+        game.players[game.curr].holes[]
+                               .map!(x => game.valid(x) ? entries[x%6] : " ")
+                               .joiner("  ")
+                               .writeln;
     }
 
     Player getPlayer(in uint i) {
