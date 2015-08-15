@@ -183,6 +183,8 @@ void main() {
         game.swapTurns();
     }
 
+    foreach (p ; game.players)
+        p.points += p.holes[].sum;
+
     ui.victory(game);
 }
-
