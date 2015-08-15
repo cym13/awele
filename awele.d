@@ -105,7 +105,7 @@ struct UI {
         printBoard(game);
         writeln();
 
-        foreach (i ; [0, 1]) {
+        foreach (i ; [1, 0]) {
             writeln(game.curr == i ? "*" : " ",
                     game.players[i].name,
                     " [", game.players[i].points, "]");
@@ -148,13 +148,13 @@ struct UI {
         if (game.curr == 0) {
             board;
             write(" ");
-            letters.joiner("  ")
+            letters.map!toUpper
+                   .joiner("  ")
                    .writeln;
         }
         else {
             write(" ");
             letters.retro
-                   .map!toUpper
                    .joiner("  ")
                    .writeln;
             board;
