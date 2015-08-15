@@ -137,17 +137,32 @@ struct UI {
     }
 
     void printBoard(in Game game) {
-        writeln(game.board);
+        auto letters() {
+            enum entries = "abcdef".split("");
+            return game.players[game.curr]
+                       .holes[]
+                       .map!(x => game.valid(x) ? entries[x%6] : " ");
+        }
 
-        write(" ");
-        if (game.curr == 1)
-            write("                  ");
+        void board() {
+            game.board[6..12].retro.writeln;
+            game.board[0..6].writeln;
+        }
 
-        enum entries = "abcdef".split("");
-        game.players[game.curr].holes[]
-                               .map!(x => game.valid(x) ? entries[x%6] : " ")
-                               .joiner("  ")
-                               .writeln;
+        if (game.curr == 0) {
+            board;
+            write(" ");
+            letters.joiner("  ")
+                   .writeln;
+        }
+        else {
+            write(" ");
+            letters.retro
+                   .map!toUpper
+                   .joiner("  ")
+                   .writeln;
+            board;
+        }
     }
 
     Player getPlayer(in uint i) {
