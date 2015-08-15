@@ -26,7 +26,6 @@ struct Game {
     uint[12]  board = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
     Player[2] players;
     uint      curr;
-    bool      _end = false;
 
     this(Player p1, Player p2) {
         players = [p1, p2];
@@ -84,9 +83,6 @@ struct Game {
 
     bool end() {
         if (players[curr].starving)
-            return true;
-
-        if (_end)
             return true;
 
         if (board[].sum < 5)
